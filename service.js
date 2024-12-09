@@ -30,16 +30,20 @@
 // };
 
 const axios = require('axios');
+require('dotenv').config();
 
-const user = 'cee47ec8-4ae7-46dc-b131-dc00eb43d02e';
-const pass = 'eG2ZA4Jr#c}y(FED{N8_fS';
+const user = process.env.VITE_API_KEY;
+const pass = process.env.VITE_API_SECRET;
+
+const apiUrl = process.env.VITE_API_URL;
 
 // Créer la chaîne d'authentification "user:pass" et l'encoder en Base64
 const base64Credentials = Buffer.from(`${user}:${pass}`).toString('base64');
 
 // Instance Axios avec configuration par défaut
 const apiClient = axios.create({
-    baseURL: 'https://drive.topupbackup.com',
+    // baseURL: String = process.env.VITE_API_URL,
+    baseURL: apiUrl,
     headers: {
         'Authorization': `Basic ${base64Credentials}`,
     },
@@ -59,9 +63,6 @@ const createPresubmit = (merchant, decoder, formula, options, duration) => {
     return apiClient.put('/subscription/renewal/', { merchant, decoder, formula, options, duration });
 };
 
-// const confirmedPay = (confirmed, subscription, mobile) => {
-//     return apiClient.put('/subscription/confirm/', { confirmed, subscription, mobile});
-// };
 
 const confirmedPay = async (confirmed, subscription, mobile) => {
     try {
@@ -70,7 +71,7 @@ const confirmedPay = async (confirmed, subscription, mobile) => {
             subscription,
             mobile
         });
-        console.log('Réponse de l\'API :', response.data);
+        // console.log('Réponse de l\'API :', response.data);
         return response;
     } catch (error) {
         console.error('Erreur lors de l\'appel API :', {
@@ -78,7 +79,7 @@ const confirmedPay = async (confirmed, subscription, mobile) => {
             status: error.response?.status || 'Status inconnu',
             data: error.response?.data || 'Pas de réponse',
         });
-        throw error; // Propager l'erreur pour être capturée dans l'appelant
+        throw error;
     }
 };
 

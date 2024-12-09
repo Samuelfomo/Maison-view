@@ -50,10 +50,7 @@ router.post('/subscription/renewal', async (req, res) =>{
 })
 router.post('/subscription/confirm', async (req, res) =>{
     const {confirmed, subscription, mobile} = req.body;
-    console.log('donnees recues',req.body);
-    // if(!mobile || !subscription){
-    //     return res.status(400).json({ message: 'messing_required_fields' });
-    // }
+    // console.log('donnees recues',req.body);
 
     if (confirmed === undefined || confirmed === null || typeof confirmed !== 'boolean') {
         return res.status(400).json({ message: 'missing_required_fields' });
