@@ -47,9 +47,6 @@
 
 <script setup>
 import { ref } from 'vue'
-// import Decoder from '@/data/class/Decoder'
-// import Subscriber from '@/data/class/Subscriber'
-// import Formula from '@/data/class/Formula'
 import topup from '../../../src/assets/images/topup_logo.svg'
 import createDecoderApiService from '@/services/decoderApiService'
 
@@ -57,8 +54,6 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
-
-// const decoder = ref<Decoder>('');
 const decoderNumber = ref('');
 const isLoading = ref(false)
 
@@ -66,26 +61,8 @@ const searchDecoder = async () => {
   isLoading.value = true
 
   try {
-    // const subscriber = new Subscriber(
-    //     '',
-    //     '',
-    //     0,
-    // );
-    //
-    // const formula = new Formula(
-    //     '', // name
-    //     '', // formula
-    //     0    // amount
-    // );
-    //  decoder = new Decoder(
-    //     0,
-    //     parseInt(decoderNumber.value),
-    //     subscriber,
-    //     formula,
-    //     new Date()
-    // );
-
     const testDecoder = createDecoderApiService();
+
     const result =  await testDecoder.decodeNumber( parseInt(decoderNumber.value));
 
     await router.push({
@@ -93,9 +70,6 @@ const searchDecoder = async () => {
       query: { decoder: result.device.toString()  }
       // query: { decoder: JSON.stringify(result)   }
     });
-
-      // Pass credentials securely (ideally from environment variables)
-   // await device.fetchDecoderDetails();
     // Rest of the code remains the same...
   } catch (error) {
     console.error('Erreur lors de la recherche:', error);
@@ -103,24 +77,6 @@ const searchDecoder = async () => {
     isLoading.value = false;
   }
 }
-// const searchDecoder = async () => {
-//   isLoading.value = true
-//   try {
-//     const response = await ApiService.searchDecoder(
-//         parseInt(decoderNumber.value)
-//     );
-//
-//     if (response.status === 1) {
-//       // Process device details
-//       const subscriberData = response.response[0];
-//       // Map data to Decoder object
-//     }
-//   } catch (error) {
-//     // Handle errors
-//   } finally {
-//     isLoading.value = false;
-//   }
-// }
 
 </script>
 

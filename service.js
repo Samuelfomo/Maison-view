@@ -55,6 +55,34 @@ const createShortlink = (shortlink) => {
     return apiClient.put('/shortlink/', { shortlink });
 };
 
+const createPresubmit = (merchant, decoder, formula, options, duration) => {
+    return apiClient.put('/subscription/renewal/', { merchant, decoder, formula, options, duration });
+};
+
+// const confirmedPay = (confirmed, subscription, mobile) => {
+//     return apiClient.put('/subscription/confirm/', { confirmed, subscription, mobile});
+// };
+
+const confirmedPay = async (confirmed, subscription, mobile) => {
+    try {
+        const response = await apiClient.put('/subscription/confirm/', {
+            confirmed,
+            subscription,
+            mobile
+        });
+        console.log('Réponse de l\'API :', response.data);
+        return response;
+    } catch (error) {
+        console.error('Erreur lors de l\'appel API :', {
+            message: error.message,
+            status: error.response?.status || 'Status inconnu',
+            data: error.response?.data || 'Pas de réponse',
+        });
+        throw error; // Propager l'erreur pour être capturée dans l'appelant
+    }
+};
+
+
 // Service pour récupérer des exigences
 const fetchRequirement = () => {
     return apiClient.get('/requirement/');
@@ -65,5 +93,7 @@ module.exports = {
     searchDecoderNumber,
     createShortlink,
     fetchRequirement,
+    createPresubmit,
+    confirmedPay
 };
 

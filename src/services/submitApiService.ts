@@ -4,17 +4,20 @@ import PreSubscription from "../data/class/PreSubscription";
 
 interface SubmitApiService {
 
-    formSubmit(  decoder: PreSubscription): Promise<PreSubscription>; // Remplacez `any` par un type spécifique si nécessaire
+    formSubmit(  datas: PreSubscription): Promise<PreSubscription>;
+
+    // New payment method
+    payement(phoneNumber: string, guid: number): Promise<any>;
 }
 
 const createSubmitApiService = (
-    endpoint: 'drive.topupbackup.com',
-    username: 'cee47ec8-4ae7-46dc-b131-dc00eb43d02e',
-    password: 'eG2ZA4Jr#c}y(FED{N8_fS'
+    endpoint: string = import.meta.env.VITE_API_URL as string,
+    username: string = import.meta.env.VITE_API_KEY as string,
+    password: string = import.meta.env.VITE_API_SECRET as string
 ): SubmitApiService => {
     // Crée un client Axios configuré
     const apiClient: AxiosInstance = axios.create({
-        baseURL: `https://${endpoint}/search/decoder/number/`,
+        baseURL: `https://${endpoint}/presubmit/`,
         headers: {
             'Content-Type': 'application/json',
         },
@@ -27,36 +30,23 @@ const createSubmitApiService = (
     return {
         /**
          * 23800456666977
-         * @param decoder
+         * @param datas
          * @returns
          */
-        // async  decodeNumber(decoder: number) {
-        //     try {
-        //         const response = await fetch('http://localhost:5000/search/decoder/number', {
-        //             method: 'POST',
-        //             headers: {
-        //                 'Content-Type': 'application/json',
-        //             },
-        //             body: JSON.stringify({ decoder }),
-        //         });
-        //
-        //         // const data = await response.json();
-        //         const data = await Decoder.todecoderAPIResponse(JSON.stringify(response.json()));
-        //         return data;
-        //     } catch (error) {
-        //         console.error('Erreur lors du décodage:', error);
-        //         throw new Error('Impossible de décoder le numéro.');
-        //     }
-        // }
-
-        async formSubmit(decoder: PreSubscription) {
+        async formSubmit(datas: PreSubscription) {
             try {
-                const response = await fetch('http://localhost:3003/presubmit', {
+                const response = await fetch('http://localhost:3003/subscription/renewal', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ decoder }),
+                    body: JSON.stringify({
+                        merchant: datas.merchant,
+                        decoder: datas.decoder,
+                        formula: datas.formula,
+                        options: datas.options,
+                        duration: datas.duration
+                    }),
                 });
 
                 if (!response.ok) {
@@ -67,7 +57,49 @@ const createSubmitApiService = (
                 return PreSubscription.fromJson(data.response);
             } catch (error) {
                 console.error('Erreur lors de l\'envoi des donnees :', error);
-                throw new Error('Impossible de d\'envoyer les donnees.');
+                throw new Error('Impossible d\'envoyer les donnees.');
+            }
+        },
+
+        // New payment method
+        async payement(phoneNumber: string, guid: number) {
+            try {
+                const response = await fetch('http://localhost:3003/subscription/confirm/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        confirmed: false,
+                        subscription: guid,
+                        mobile: phoneNumber
+                    }),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Erreur de paiement: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                // Handle different payment responses
+                if (data.status === 1) {
+                    // Payment successful
+                    return {
+                        success: true,
+                        transactionId: guid || null,
+                        message: 'Paiement réussi'
+                    };
+                } else {
+                    // Payment failed
+                    return {
+                        success: false,
+                        message: data.message || 'Échec du paiement'
+                    };
+                }
+            } catch (error) {
+                console.error('Erreur lors du paiement :', error);
+                throw new Error('Impossible de traiter le paiement.');
             }
         }
 

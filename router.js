@@ -1,6 +1,5 @@
 const express = require('express');
-const { searchDecoderNumber, createShortlink, fetchRequirement } = require('./service');
-
+const { searchDecoderNumber, createShortlink, fetchRequirement, createPresubmit, confirmedPay } = require('./service');
 const router = express.Router();
 
 // Route pour décoder un numéro
@@ -34,5 +33,39 @@ router.get('/requirement', async (req, res) => {
         res.status(500).json({ message: 'Erreur lors de la requête vers l\'API', error: error.message });
     }
 });
+
+router.post('/subscription/renewal', async (req, res) =>{
+    const {merchant, decoder, formula, options, duration} = req.body;
+    if(!formula || !duration || !decoder){
+        return res.status(400).json({ message: 'messing_required_fields' });
+    }
+
+    try {
+        const response = await createPresubmit(merchant, decoder, formula, options, duration);
+        res.json(response.data);
+
+    } catch (error){
+        res.status(500).json({ message: 'Erreur lors de la requête vers l\'API', error: error.message });
+    }
+})
+router.post('/subscription/confirm', async (req, res) =>{
+    const {confirmed, subscription, mobile} = req.body;
+    console.log('donnees recues',req.body);
+    // if(!mobile || !subscription){
+    //     return res.status(400).json({ message: 'messing_required_fields' });
+    // }
+
+    if (confirmed === undefined || confirmed === null || typeof confirmed !== 'boolean') {
+        return res.status(400).json({ message: 'missing_required_fields' });
+    }
+
+    try {
+        const response = await confirmedPay(confirmed, subscription, mobile);
+        res.json(response.data);
+
+    } catch (error){
+        res.status(500).json({ message: 'Erreur lors de la requête vers l\'API', error: error.message });
+    }
+})
 
 module.exports = router;

@@ -8,13 +8,13 @@ interface ShortlinkApiService {
 }
 
 const createShortlinkApiService = (
-    endpoint: 'drive.topupbackup.com',
-    username: 'cee47ec8-4ae7-46dc-b131-dc00eb43d02e',
-    password: 'eG2ZA4Jr#c}y(FED{N8_fS'
+    endpoint: string = import.meta.env.VITE_API_URL as string,
+    username: string = import.meta.env.VITE_API_KEY as string,
+    password: string = import.meta.env.VITE_API_SECRET as string
 ): ShortlinkApiService => {
 
     const apiClient: AxiosInstance = axios.create({
-        baseURL: `https://${endpoint}/search/decoder/number/`,
+        baseURL: `https://${endpoint}/shortlink/`,
         headers: {
             'Content-Type': 'application/json',
         },
@@ -30,24 +30,6 @@ const createShortlinkApiService = (
          * @param shortlink
          * @returns
          */
-        // async  decodeNumber(decoder: number) {
-        //     try {
-        //         const response = await fetch('http://localhost:5000/search/decoder/number', {
-        //             method: 'POST',
-        //             headers: {
-        //                 'Content-Type': 'application/json',
-        //             },
-        //             body: JSON.stringify({ decoder }),
-        //         });
-        //
-        //         // const data = await response.json();
-        //         const data = await Decoder.todecoderAPIResponse(JSON.stringify(response.json()));
-        //         return data;
-        //     } catch (error) {
-        //         console.error('Erreur lors du décodage:', error);
-        //         throw new Error('Impossible de décoder le numéro.');
-        //     }
-        // }
 
         async getshortlink(shortlink: string) {
             try {

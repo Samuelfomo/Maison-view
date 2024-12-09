@@ -1,4 +1,22 @@
 <template>
+  <div class="fixed top-4 right-4 z-50 name">
+    <TransitionGroup v-if="alerts && alerts.length > 0" tag="div" name="alert">
+      <div
+          v-for="alert in alerts"
+          :key="alert.id"
+          :class="{
+      'bg-green-500 text-white': alert.type === 'success',
+      'bg-red-500 text-white': alert.type === 'error',
+      'bg-yellow-500 text-black': alert.type === 'warning',
+      'px-9 py-5 rounded shadow-lg mb-2': true
+    }"
+      >
+        <strong>{{ alert.title }}:</strong> {{ alert.message }}
+        <button @click="removeAlert(Number(alert.id))" class="ml-2 text-xs text-gray-200">X</button>
+      </div>
+    </TransitionGroup>
+  </div>
+
   <div class="min-h-screen bg-gray-100 flex items-center justify-center p-2">
     <div
         v-if="isLoading"
@@ -72,6 +90,14 @@
                 </label>
                 <span class="ml-2 text-white uppercase font-roboto text-sm">{{ formula }}</span>
                 <span class="ml-auto mr-2 text-white uppercase font-roboto text-sm text-end">{{ getPriceForFormula(formula) }} XAF</span>
+
+                <!-- New hidden input for formula ID -->
+                <input
+                    type="hidden"
+                    :id="`formula-code-${formula}`"
+                    :value="getFormulaCode(formula)"
+                />
+
               </div>
             </div>
           </div>
@@ -103,6 +129,14 @@
                 <span class="ml-auto mr-2 text-white uppercase font-roboto text-sm text-end">
                 {{ getPriceForBouquet(bouquet) }} XAF
               </span>
+
+                <!-- New hidden input for bouquet ID -->
+                <input
+                    type="hidden"
+                    :id="`bouquet-id-${bouquet}`"
+                    :value="getBouquetCode(bouquet)"
+                />
+
               </div>
             </div>
           </div>
@@ -194,10 +228,6 @@
               <p class="font-bold font-roboto">{{ confirmationData.duration }} mois</p>
             </div>
             <div class="flex justify-between items-center">
-              <p class="font-medium text-gray-700 font-patrick-hand text-lg">Montant :</p>
-              <p class="font-bold font-roboto">{{ confirmationData.amount }} XAF</p>
-            </div>
-            <div class="flex justify-between items-center">
               <p class="font-medium text-gray-700 font-patrick-hand text-lg">Options :</p>
               <ul class="font-bold font-roboto">
                 <li v-for="option in confirmationData.options" :key="option">{{ option }}</li>
@@ -205,15 +235,21 @@
             </div>
             <div class="flex justify-between items-center">
               <p class="font-medium text-gray-700 font-patrick-hand text-lg">Total :</p>
-              <p class="font-bold text-orange-500 font-roboto">{{ confirmationData.total }} XAF</p>
+              <p class="font-bold font-roboto text-xl">{{ formatTotalAmount(confirmationData.total) }}</p>
             </div>
           </div>
+        </div>
+
+        <div hidden>
+          {{ confirmationData.guid }}
         </div>
 
         <!-- Pied de page -->
         <div class=" px-4 py-3 flex justify-between items-center font-patrick-hand">
           <p class="text-sm text-gray-600">
-            La somme de <span class="font-bold">{{ confirmationData.total }}</span> sera débitée par Orange Money.
+            La somme de <span class="font-bold">{{ formatTotalAmount(confirmationData.total) }}</span>
+            (<span class="italic">{{ convertNumberToWords(confirmationData.total) }}</span>)
+            sera débitée par Orange Money.
           </p>
         </div>
 
@@ -237,89 +273,11 @@
       </div>
     </div>
   </div>
-
-
-
-  <!--  <div v-if="showConfirmationModal" class="fixed z-10 inset-0 overflow-y-auto">-->
-<!--    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">-->
-<!--      <div class="fixed inset-0 transition-opacity" aria-hidden="true">-->
-<!--        <div class="absolute inset-0 bg-gray-500 opacity-75"></div>-->
-<!--      </div>-->
-
-<!--      <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>-->
-
-<!--      <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">-->
-<!--        <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-green-100 sm:h-16 sm:w-16 mt-4">-->
-<!--          <svg class="h-9 w-9 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">-->
-<!--            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"-->
-<!--                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-5-5.917V4a2 2 0 10-4 0v1.083A6.002 6.002 0 004 11v3.159c0 .538-.214 1.055-.595 1.436L2 17h5m7 0a3 3 0 11-6 0h6z"-->
-<!--            />-->
-<!--          </svg>-->
-<!--        </div>-->
-<!--        <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">-->
-<!--          <div class="sm:flex sm:items-start">-->
-<!--            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">-->
-<!--              <h3 class="text-2xl leading-6 font-medium font-roboto text-gray-900 text-center ml-10 pb-3 mt-0" id="modal-title">-->
-<!--                Confirmer votre réabonnement-->
-<!--              </h3>-->
-<!--              &lt;!&ndash; Contenu spécifique de confirmation &ndash;&gt;-->
-<!--              <div class="mt-4 space-y-4">-->
-<!--                <div class="flex items-center">-->
-<!--                  <p class="font-medium font-patrick-hand text-lg mr-4">Formule d'abonnement:</p>-->
-<!--                  <p class="font-roboto font-bold text-xl">{{ confirmationData.formula }}</p>-->
-<!--                </div>-->
-
-<!--                <div>-->
-<!--                  <p class="font-medium font-patrick-hand text-lg">Options:</p>-->
-<!--                  <ul class="list-disc pl-6 flex text-xl font-bold font-roboto">-->
-<!--                    <li class="ml-16" v-for="option in confirmationData.options" :key="option">{{ option }}</li>-->
-<!--                  </ul>-->
-<!--                </div>-->
-
-<!--                <div class="flex items-center">-->
-<!--                  <p class="font-medium font-patrick-hand text-lg mr-4">Durée:</p>-->
-<!--                  <p class="font-roboto font-bold text-xl">{{ confirmationData.duration }} mois</p>-->
-<!--                </div>-->
-
-<!--                <div class="flex items-center">-->
-<!--                  <p class="font-medium font-patrick-hand text-lg mr-4">Montant total:</p>-->
-<!--                  <p class="font-roboto font-bold text-xl">{{ confirmationData.total }} XAF</p>-->
-<!--                </div>-->
-
-<!--                <div class="flex items-center">-->
-<!--                  <p class="font-medium font-patrick-hand text-lg mr-4">Date d'expiration:</p>-->
-<!--                  <p class="font-roboto font-bold text-xl" style="color: #FF4200">{{ confirmationData.expiryDate }}</p>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--        &lt;!&ndash; Boutons &ndash;&gt;-->
-<!--        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">-->
-<!--          <button-->
-<!--              type="button"-->
-<!--              class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-full sm:text-sm"-->
-<!--              @click="confirmSubscription"-->
-<!--          >-->
-<!--            Confirmer-->
-<!--          </button>-->
-<!--          <button-->
-<!--              type="button"-->
-<!--              class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-full sm:text-sm"-->
-<!--              @click="showConfirmationModal = false"-->
-<!--          >-->
-<!--            Annuler-->
-<!--          </button>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--  </div>-->
-
-
 </template>
 
 <script lang="ts">
 import {defineComponent, ref} from 'vue'
+import {Alert} from '@/data/class/PreSubscription'
 import router from '../../../src/router'
 import mtnLogo from '../../../src/assets/images/mtn-logo.png'
 import orangeLogo from '../../../src/assets/images/orange-logo.png'
@@ -329,31 +287,24 @@ import { useRoute } from 'vue-router';
 import createDecoderApiService from '@/services/decoderApiService'
 import createShortlinkApiService from '@/services/shortlinkApiService'
 import createRequiementApiService from '@/services/requiementApiService'
+import createSubscriptionApiService from '@/services/submitApiService'
 
 import PreSubscription from '@/data/class/PreSubscription'
 
-
 const testDecoder = createDecoderApiService(
-    "drive.topupbackup.com",
-    "cee47ec8-4ae7-46dc-b131-dc00eb43d02e",
-    "eG2ZA4Jr#c}y(FED{N8_fS"
+    import.meta.env.VITE_API_URL,
+    import.meta.env.VITE_API_KEY,
+    import.meta.env.VITE_API_SECRET
 );
 
-const testShortlink = createShortlinkApiService(
-    "drive.topupbackup.com",
-    "cee47ec8-4ae7-46dc-b131-dc00eb43d02e",
-    "eG2ZA4Jr#c}y(FED{N8_fS"
-);
+const testShortlink = createShortlinkApiService();
 
-const requirement = createRequiementApiService(
-    "drive.topupbackup.com",
-    "cee47ec8-4ae7-46dc-b131-dc00eb43d02e",
-    "eG2ZA4Jr#c}y(FED{N8_fS"
-);
+const requirement = createRequiementApiService();
+
+const subscription = createSubscriptionApiService()
 
 // Types pour les formules et opérateurs
 type Formula = string;
-
 type Bouquet = string;
 type MobileOperator = 'MTN' | 'Orange' | null
 
@@ -365,6 +316,8 @@ export default defineComponent({
       mtnLogo,
       orangeLogo,
       isLoading : ref(false),
+      alerts: [] as Alert[],
+
 
       // hidden id code
       merchant: null as number,
@@ -394,16 +347,20 @@ export default defineComponent({
       bouquetPrices: {} as Record<Bouquet, number>,
 
       showConfirmationModal: false,
+
       confirmationData: {
-        formula: this.selectedFormula,
-        options: this.selectedbouquets,
-        duration:this.selectedDuration,
-        expiryDate: this.formattedExpiryDate,
+        formula: '',
+        options: [],
+        duration: '',
+        expiryDate: '',
         total: 0,
-        phoneNumber: this.phoneNumber,
-        merchant: this.merchant,
-        decoder: this.decoder,
+        phoneNumber: '',
+        merchant: '',
+        decoder: '',
+        guid:''
       },
+
+      resultrequis: null,
     }
   },
   computed: {
@@ -464,44 +421,71 @@ export default defineComponent({
 
     async submitForm() {
       if (!this.phoneNumber || !this.mobileOperator) {
-        alert('Veuillez entrer un numéro de mobile valide')
+        this.showMessage('Veuillez entrer un numéro de mobile valide', 'warning');
         return
       }
 
       if (!this.selectedFormula) {
-        alert('Veuillez choisir une formule')
+        this.showMessage('Veuillez choisir une formule', 'warning');
         return
       }
 
       const presubmitData = new PreSubscription(
           null,
           null,
-          this.merchant,
-          this.selectedFormula,
-          this.selectedbouquets,
+          this.decoderCode,
+          this.merchant || 444229,
+          this.getFormulaCode(this.selectedFormula),
+          this.getBouquetCode(this.selectedbouquets) || [],
           parseInt(this.selectedDuration),
-          this.phoneNumber,
-          this.calculateTotal()
+          null,
+          null
       )
       try {
-        this.showConfirmationModal =  true;
-        const response = await presubmitData.prepareConfirm();
-        console.log(response)
-        if (response.confirmationToken){
-          router.push({
-            name: 'subscription-confirmation',
-            query: { token: response.confirmationToken }
-          });
-          console.log(presubmitData)
-          alert('Formulaire soumis avec succès!')
+        const response = await subscription.formSubmit(presubmitData);
+        if (response){
+          console.log('les donnees recu de l\'api sont :', this.decoderCode, this.decoder)
+          this.showConfirmationModal =  true;
+          this.confirmationData.decoder = this.decoderCode;
+          this.confirmationData.formula = this.selectedFormula;
+          this.confirmationData.options = this.selectedbouquets;
+          this.confirmationData.duration = this.selectedDuration;
+          this.confirmationData.expiryDate = this.formattedExpiryDate;
+          this.confirmationData.amount = this.calculateTotal();
+          this.confirmationData.total = this.calculateTotal();
+          this.confirmationData.phoneNumber = this.phoneNumber;
+          this.confirmationData.merchant = this.merchant;
+          this.confirmationData.guid = response.code;
+          console.log('guid',this.confirmationData.guid, 'phone', this.phoneNumber)
         }
         else {
-          alert('La pré-inscription a réussi mais la confirmation est impossible');
+          this.showMessage('La pré-inscription a réussi mais la confirmation est impossible', 'error');
         }
 
       } catch (error: unknown) {
         const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue';
-        alert(`Échec de la pré-inscription : ${errorMessage}`);
+        this.showMessage(`Échec de la pré-inscription : ${errorMessage}`, 'error');
+      }
+    },
+
+
+    async confirmSubscription() {
+      try {
+        const paymentResult = await subscription.payement(this.phoneNumber, parseInt(this.confirmationData.guid));
+
+        if (paymentResult.success) {
+          // Payment successful
+          this.showMessage('Paiement réussi ! Transaction ID: ' + paymentResult.transactionId,'success');
+          // alert('Paiement réussi ! Transaction ID: ' + paymentResult.transactionId);
+          this.showConfirmationModal = false;
+        } else {
+          // Payment failed
+          this.showMessage('Échec du paiement : ' + paymentResult.message, 'error');
+        }
+        await this.clearSubscription();
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue';
+        this.showMessage(`Échec du paiement : ${errorMessage}`, 'error');
       }
     },
 
@@ -526,6 +510,9 @@ export default defineComponent({
       try {
         const resultrequis = await requirement.formuleOptions();
 
+        // Store the full result to use in ID lookup methods
+        this.resultrequis = resultrequis;
+
         // For formulas
         this.availableFormulas = resultrequis.formules.map(formula => formula.name || formula.getName());
         this.formulaPrices = resultrequis.formules.reduce((acc, formula) => {
@@ -541,21 +528,159 @@ export default defineComponent({
         }, {});
         this.isLoading = false;
       } catch (error) {
+        this.showMessage('Erreur lors de la récupération des données', error, 'error');
         console.error('Erreur lors de la récupération des données', error);
       }
-    }
+    },
 
+    getFormulaCode(formula: Formula): string | null {
+      const foundFormula = this.resultrequis.formules.find(
+          f => f.name === formula
+      );
+      return foundFormula ? (foundFormula.code) : null;
+    },
+
+    getBouquetCode(): string[] | null {
+      return this.selectedbouquets.map(bouquet => {
+        const foundBouquet = this.resultrequis.options.find(
+            o => o.name === bouquet
+        );
+        return foundBouquet ? foundBouquet.code : null;
+      }).filter(code => code !== null);
+    },
+
+    showMessage(msg: string, type: 'success' | 'warning' | 'error' = 'success') {
+      // Évite les doublons de message
+      if (this.alerts.some(alert => alert.message === msg)) return;
+
+      const id = Date.now();
+      this.alerts.push({
+        id,
+        title: this.getAlertTitle(type), // Titre dynamique basé sur le type
+        message: msg,
+        type: type
+      });
+
+      // Faire disparaître l'alerte après 3 secondes
+      setTimeout(() => {
+        this.removeAlert(id);
+      }, 3000);
+    },
+
+    // Méthode pour obtenir le titre approprié
+    getAlertTitle(type: 'success' | 'warning' | 'error'): string {
+      switch(type) {
+        case 'success': return 'Succès';
+        case 'warning': return 'Attention';
+        case 'error': return 'Erreur';
+      }
+    },
+
+    removeAlert(id: number | string) {
+      this.alerts = this.alerts.filter(alert => alert.id !== id);
+    },
+
+    formatTotalAmount(amount: number, currency: string = 'XAF', separatorChar: string = ' '): string {
+      const roundedAmount = Math.round(amount);
+      return roundedAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, separatorChar) + ` ${currency}`;
+    },
+
+    convertNumberToWords(num: number): string {
+      // Tableau des unités
+      const unites = [
+        '', 'un', 'deux', 'trois', 'quatre', 'cinq', 'six', 'sept', 'huit', 'neuf',
+        'dix', 'onze', 'douze', 'treize', 'quatorze', 'quinze', 'seize',
+        'dix-sept', 'dix-huit', 'dix-neuf'
+      ];
+
+      // Tableau des dizaines
+      const dizaines = [
+        '', '', 'vingt', 'trente', 'quarante', 'cinquante', 'soixante',
+        'soixante', 'quatre-vingt', 'quatre-vingt'
+      ];
+
+      // Fonction récursive pour convertir les centaines
+      const convertHundreds = (n: number): string => {
+        if (n === 0) return '';
+
+        if (n === 100) return 'cent';
+
+        if (n < 100) {
+          if (n < 20) return unites[n];
+
+          const dizaine = Math.floor(n / 10);
+          const unite = n % 10;
+
+          // Cas spéciaux pour 70, 80, 90
+          if (dizaine === 7) return dizaines[6] + (unite === 0 ? '' : '-' + (unite === 1 ? 'et-un' : unites[unite + 10]));
+          if (dizaine === 9) return dizaines[8] + (unite === 0 ? '' : '-' + unites[unite + 10]);
+
+          // Cas général
+          return dizaines[dizaine] +
+              (unite === 0 ? '' :
+                  (dizaine === 8 ? '-' : (unite === 1 ? ' et ' : '-')) +
+                  unites[unite]);
+        }
+
+        // Pour les centaines
+        const centaines = Math.floor(n / 100);
+        const reste = n % 100;
+
+        return (centaines === 1 ? 'cent' : unites[centaines] + ' cent') +
+            (reste === 0 ? '' : ' ' + convertHundreds(reste));
+      };
+
+      // Gestion des cas spéciaux
+      if (num === 0) return 'zéro';
+
+      let result = '';
+      const milliards = Math.floor(num / 1000000000);
+      const millions = Math.floor((num % 1000000000) / 1000000);
+      const milliers = Math.floor((num % 1000000) / 1000);
+      const reste = num % 1000;
+
+      // Construction du résultat
+      if (milliards > 0) {
+        result += convertHundreds(milliards) + (milliards === 1 ? ' milliard ' : ' milliards ');
+      }
+
+      if (millions > 0) {
+        result += convertHundreds(millions) + (millions === 1 ? ' million ' : ' millions ');
+      }
+
+      if (milliers > 0) {
+        result += (milliers === 1 ? 'mille ' : convertHundreds(milliers) + ' mille ');
+      }
+
+      if (reste > 0 || (milliards === 0 && millions === 0 && milliers === 0)) {
+        result += convertHundreds(reste);
+      }
+
+      return result.trim() + ' francs CFA';
+    },
+
+    clearSubscription(){
+      this.phoneNumber = '';
+      this.mobileOperator = null;
+      this.selectedFormula = '';
+      this.selectedbouquets = [];
+      this.selectedDuration = '01';
+      this.formattedExpiryDate = '';
+      this.subscriberName = '';
+      this.decoderCode = '';
+      this.decoderFormula = '';
+    }
 
   },
 
  props: {
     shortlink: {
       type: String,
-      default: null, // Utilisé si c'est un ID
+      default: null,
     },
     decoder: {
       type: Object,
-      default: null, // Utilisé si c'est un objet
+      default: null,
     },
   },
   setup() {
@@ -578,6 +703,7 @@ export default defineComponent({
         this.formattedExpiryDate = this.formatDate(new Date(result.finished.toString()) || new Date());
       }
       this.isLoading = false
+      this.showMessage('decoder verification successful', 'success');
     }
 
     if (this.shortlink) {
@@ -594,10 +720,12 @@ export default defineComponent({
             this.formattedExpiryDate = this.formatDate(new Date(result.finished.toString()) || new Date());
           }
         } catch (error) {
+          this.showMessage('Error during decoding decoder:', error, 'error');
           console.error('Error during decoding decoder:', error);
           router.push({ name: 'home' });
         }
         this.isLoading = false;
+        this.showMessage('access confirmed', 'success');
       } else {
         console.log('shorlink', this.shortlink);
         try {
@@ -616,15 +744,18 @@ export default defineComponent({
                 this.formattedExpiryDate = this.formatDate(new Date(decodeResult.finished.toString()) || new Date());
               }
             } catch (error) {
+              this.showMessage('Error during decoding shortlink:', error, 'error');
               console.error('Error during decoding shortlink:', error);
               router.push({ name: 'home' });
             }
           }
         } catch (error) {
+          this.showMessage('Error during shortlink retrieval:', error, 'error');
           console.error('Error during shortlink retrieval:', error);
           router.push({ name: 'home' });
         }
         this.isLoading = false;
+        this.showMessage('access confirmed', 'success');
       }
     }
     await this.getrequiement();

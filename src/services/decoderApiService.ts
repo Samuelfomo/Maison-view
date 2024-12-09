@@ -8,9 +8,10 @@ interface DecoderApiService {
 }
 
 const createDecoderApiService = (
-    endpoint: 'drive.topupbackup.com',
-    username: 'cee47ec8-4ae7-46dc-b131-dc00eb43d02e',
-    password: 'eG2ZA4Jr#c}y(FED{N8_fS'
+    endpoint: string = import.meta.env.VITE_API_URL as string,
+    username: string = import.meta.env.VITE_API_KEY as string,
+    password: string = import.meta.env.VITE_API_SECRET as string
+
 ): DecoderApiService => {
     // Crée un client Axios configuré
     const apiClient: AxiosInstance = axios.create({
@@ -51,6 +52,7 @@ const createDecoderApiService = (
 
         async decodeNumber(decoder: number) {
             try {
+
                 const response = await fetch('http://localhost:3003/search/decoder/number', {
                     method: 'POST',
                     headers: {
