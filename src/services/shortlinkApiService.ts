@@ -4,7 +4,7 @@ import Shortlink from "../data/class/Shortlink";
 
 
 interface ShortlinkApiService {
-    getshortlink(shortlink: string): Promise<Shortlink>; // Remplacez `any` par un type spécifique si nécessaire
+    getshortlink(shortlink: string): Promise<Shortlink>;
 }
 
 const createShortlinkApiService = (

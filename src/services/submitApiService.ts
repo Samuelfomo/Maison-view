@@ -6,8 +6,7 @@ interface SubmitApiService {
 
     formSubmit(  datas: PreSubscription): Promise<PreSubscription>;
 
-    // New payment method
-    payement(phoneNumber: string, guid: number): Promise<any>;
+    payement(phoneNumber: string, guid: number, confirmed: boolean): Promise<any>;
 }
 
 const createSubmitApiService = (
@@ -29,7 +28,7 @@ const createSubmitApiService = (
 
     return {
         /**
-         * 23800456666977
+         * send datas for prepare ppayement off user
          * @param datas
          * @returns
          */
@@ -62,15 +61,16 @@ const createSubmitApiService = (
         },
 
         // New payment method
-        async payement(phoneNumber: string, guid: number) {
+        async payement(phoneNumber: string, guid: number, confirmed: boolean) {
             try {
+                console.log('confirmation',confirmed);
                 const response = await fetch('http://localhost:3003/subscription/confirm/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        confirmed: false,
+                        confirmed: confirmed,
                         subscription: guid,
                         mobile: phoneNumber
                     }),

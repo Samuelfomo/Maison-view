@@ -249,7 +249,7 @@
           <p class="text-sm text-gray-600">
             La somme de <span class="font-bold">{{ formatTotalAmount(confirmationData.total) }}</span>
             (<span class="italic">{{ convertNumberToWords(confirmationData.total) }}</span>)
-            sera débitée par Orange Money.
+            sera débitée de votre compte.
           </p>
         </div>
 
@@ -258,7 +258,7 @@
           <button
               type="button"
               class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-full sm:text-sm"
-              @click="showConfirmationModal = false"
+              @click="cancelConfirmation()"
           >
             Annuler
           </button>
@@ -317,7 +317,7 @@ export default defineComponent({
       orangeLogo,
       isLoading : ref(false),
       alerts: [] as Alert[],
-
+      confirmed: false as boolean,
 
       // hidden id code
       merchant: null as number,
@@ -439,7 +439,7 @@ export default defineComponent({
           this.getBouquetCode(this.selectedbouquets) || [],
           parseInt(this.selectedDuration),
           null,
-          null
+          null,
       )
       try {
         const response = await subscription.formSubmit(presubmitData);
@@ -468,11 +468,11 @@ export default defineComponent({
       }
     },
 
-
     async confirmSubscription() {
+      this.confirmed = true;
       try {
-        const paymentResult = await subscription.payement(this.phoneNumber, parseInt(this.confirmationData.guid));
-
+        console.log('confirm', this.confirmed)
+        const paymentResult = await subscription.payement(this.phoneNumber, parseInt(this.confirmationData.guid), this.confirmed);
         if (paymentResult.success) {
           // Payment successful
           this.showMessage('Paiement réussi ! Transaction ID: ' + paymentResult.transactionId,'success');
@@ -487,6 +487,16 @@ export default defineComponent({
         const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue';
         this.showMessage(`Échec du paiement : ${errorMessage}`, 'error');
       }
+      finally {
+        // Reset confirmed to false after the operation
+        this.confirmed = false;
+      }
+    },
+
+    cancelConfirmation() {
+      console.log('cancel', this.confirmed)
+      this.confirmed = false;
+      this.showConfirmationModal = false;
     },
 
     toggleBouquet(bouquet: Bouquet) {

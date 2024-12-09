@@ -66,13 +66,12 @@ const createPresubmit = (merchant, decoder, formula, options, duration) => {
 
 const confirmedPay = async (confirmed, subscription, mobile) => {
     try {
-        const response = await apiClient.put('/subscription/confirm/', {
+        return await apiClient.put('/subscription/confirm/', {
             confirmed,
             subscription,
             mobile
         });
         // console.log('Réponse de l\'API :', response.data);
-        return response;
     } catch (error) {
         console.error('Erreur lors de l\'appel API :', {
             message: error.message,

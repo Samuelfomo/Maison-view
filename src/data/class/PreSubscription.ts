@@ -1,5 +1,3 @@
-import axios from "axios";
-
 class PreSubscription {
     id: number | null;
     code: number;
@@ -10,6 +8,7 @@ class PreSubscription {
     duration: number;
     phoneNumber: number;
     total: number;
+    // confirmed: boolean | null;
 
     constructor(
         id: number | null,
@@ -21,6 +20,7 @@ class PreSubscription {
         duration: number,
         phoneNumber: number,
         total: number,
+        // confirmed: boolean | null,
         ) {
         this.id = id;
             this.code = code;
@@ -31,6 +31,7 @@ class PreSubscription {
             this.duration = duration;
             this.phoneNumber = phoneNumber;
             this.total = total;
+            // this.confirmed = confirmed;
     }
 
     public static fromJson(json: any): PreSubscription {
@@ -44,6 +45,7 @@ class PreSubscription {
     json.duration,
     json.phoneNumber,
     json.total,
+    // json.confirmed,
 );
 }
 

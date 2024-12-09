@@ -4,7 +4,7 @@ import Decoder from "../data/class/Decoder";
 
 interface DecoderApiService {
 
-    decodeNumber(  decoder: number): Promise<Decoder>; // Remplacez `any` par un type spécifique si nécessaire
+    decodeNumber(  decoder: number): Promise<Decoder>;
 }
 
 const createDecoderApiService = (
@@ -26,30 +26,11 @@ const createDecoderApiService = (
     });
 
     return {
-        /**
-         * 23800456666977
-         * @param decoder
-         * @returns
-         */
-        // async  decodeNumber(decoder: number) {
-        //     try {
-        //         const response = await fetch('http://localhost:5000/search/decoder/number', {
-        //             method: 'POST',
-        //             headers: {
-        //                 'Content-Type': 'application/json',
-        //             },
-        //             body: JSON.stringify({ decoder }),
-        //         });
-        //
-        //         // const data = await response.json();
-        //         const data = await Decoder.todecoderAPIResponse(JSON.stringify(response.json()));
-        //         return data;
-        //     } catch (error) {
-        //         console.error('Erreur lors du décodage:', error);
-        //         throw new Error('Impossible de décoder le numéro.');
-        //     }
-        // }
 
+        /**
+         * send datas for local server for verify decoder
+         * @param decoder
+         */
         async decodeNumber(decoder: number) {
             try {
 
