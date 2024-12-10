@@ -1,12 +1,12 @@
 const express = require('express');
-const { searchDecoderNumber, createShortlink, fetchRequirement, createPresubmit, confirmedPay } = require('./service');
+const service= require('./service');
 const router = express.Router();
 
 // Route pour décoder un numéro
 router.post('/search/decoder/number', async (req, res) => {
     const { decoder } = req.body;
     try {
-        const response = await searchDecoderNumber(decoder);
+        const response = await service.searchDecoderNumber(decoder);
         res.json(response.data);
     } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la requête vers l\'API', error: error.message });
@@ -17,7 +17,7 @@ router.post('/search/decoder/number', async (req, res) => {
 router.post('/shortlink', async (req, res) => {
     const { shortlink } = req.body;
     try {
-        const response = await createShortlink(shortlink);
+        const response = await service.createShortlink(shortlink);
         res.json(response.data);
     } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la requête vers l\'API', error: error.message });
@@ -27,7 +27,7 @@ router.post('/shortlink', async (req, res) => {
 // Route pour récupérer des exigences
 router.get('/requirement', async (req, res) => {
     try {
-        const response = await fetchRequirement();
+        const response = await service.fetchRequirement();
         res.json(response.data);
     } catch (error) {
         res.status(500).json({ message: 'Erreur lors de la requête vers l\'API', error: error.message });
@@ -41,13 +41,14 @@ router.post('/subscription/renewal', async (req, res) =>{
     }
 
     try {
-        const response = await createPresubmit(merchant, decoder, formula, options, duration);
+        const response = await service.createPresubmit(merchant, decoder, formula, options, duration);
         res.json(response.data);
 
     } catch (error){
         res.status(500).json({ message: 'Erreur lors de la requête vers l\'API', error: error.message });
     }
 })
+
 router.post('/subscription/confirm', async (req, res) =>{
     const {confirmed, subscription, mobile} = req.body;
     // console.log('donnees recues',req.body);
@@ -57,7 +58,7 @@ router.post('/subscription/confirm', async (req, res) =>{
     }
 
     try {
-        const response = await confirmedPay(confirmed, subscription, mobile);
+        const response = await service.confirmedPay(confirmed, subscription, mobile);
         res.json(response.data);
 
     } catch (error){

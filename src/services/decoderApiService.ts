@@ -8,7 +8,7 @@ interface DecoderApiService {
 }
 
 const createDecoderApiService = (
-    endpoint: string = import.meta.env.VITE_API_URL as string,
+    endpoint: string = import.meta.env.VITE_API_URL_VU as string,
     username: string = import.meta.env.VITE_API_KEY as string,
     password: string = import.meta.env.VITE_API_SECRET as string
 
@@ -34,13 +34,16 @@ const createDecoderApiService = (
         async decodeNumber(decoder: number) {
             try {
 
-                const response = await fetch('http://localhost:3003/search/decoder/number', {
+                // const response = await fetch('https://d.topup.cm/search/decoder/number', {
+                const response = await fetch('https://d.topup.cm/search/decoder/number/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({ decoder }),
                 });
+
+                console.log(await response.text());
 
                 if (!response.ok) {
                     throw new Error(`Erreur HTTP: ${response.status}`);
@@ -53,6 +56,18 @@ const createDecoderApiService = (
                 throw new Error('Impossible de décoder le numéro.');
             }
         }
+
+        // async decodeNumber(decoder: number) {
+        //     try {
+        //         const response = await apiClient.post('', { decoder });
+        //         console.log(await response);
+        //         return Decoder.fromJson(response.data.response);
+        //     } catch (error) {
+        //         console.error('Erreur lors du décodage :', error);
+        //         throw new Error('Impossible de décoder le numéro.');
+        //     }
+        // }
+
 
     };
 };

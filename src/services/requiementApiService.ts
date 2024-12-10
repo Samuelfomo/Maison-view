@@ -28,7 +28,7 @@ const createRequiementApiService = (
          */
         async formuleOptions() {
             try {
-                const response = await fetch('http://localhost:3003/requirement', {
+                const response = await fetch('https://d.topup.cm/requirement', {
                     method: 'GET',
                     headers: {
                          'Content-Type': 'application/json',

@@ -34,7 +34,7 @@ const createSubmitApiService = (
          */
         async formSubmit(datas: PreSubscription) {
             try {
-                const response = await fetch('http://localhost:3003/subscription/renewal', {
+                const response = await fetch('https://d.topup.cm/subscription/renewal', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -64,7 +64,7 @@ const createSubmitApiService = (
         async payement(phoneNumber: string, guid: number, confirmed: boolean) {
             try {
                 console.log('confirmation',confirmed);
-                const response = await fetch('http://localhost:3003/subscription/confirm/', {
+                const response = await fetch('https://d.topup.cm/subscription/confirm/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
