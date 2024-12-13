@@ -14,7 +14,6 @@ const routes = [
         name: 'Subscriber',
         component: Subscriber,
         props: true,
-
     },
 
 ];

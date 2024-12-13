@@ -3,7 +3,7 @@ const service= require('./service');
 const router = express.Router();
 
 // Route pour décoder un numéro
-router.post('/search/decoder/number', async (req, res) => {
+router.post('/decoder', async (req, res) => {
     const { decoder } = req.body;
     try {
         const response = await service.searchDecoderNumber(decoder);

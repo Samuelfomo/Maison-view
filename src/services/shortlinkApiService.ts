@@ -30,10 +30,9 @@ const createShortlinkApiService = (
          * @param shortlink
          * @returns
          */
-
         async getshortlink(shortlink: string) {
             try {
-                const response = await fetch('https://d.topup.cm/shortlink', {
+                const response = await fetch('http://192.168.100.103:3003/shortlink', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

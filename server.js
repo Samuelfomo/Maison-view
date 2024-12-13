@@ -2,31 +2,30 @@ const express = require('express');
 const path = require('path');
 const cors = require('cors');
 const router = require('./router');
-
+const config = require('./src-server/utils/defaults');
+const routerDecoder = require("./src-server/routes/decoder-router");
+const routerRequiement = require("./src-server/routes/requiement-router");
 
 
 const app = express();
 const port = process.env.PORT || 3003;
 
 app.use(cors());
-app.use(cors({
-    origin: 'https://d.topup.cm',
-    methods: ['GET', 'POST']
-}));
 
 app.use(express.json());
 
-app.use('/router', router);
+// app.use('/', router);
+app.use(`/`, routerDecoder);
+app.use(`/`, routerRequiement);
+// app.use(`/${config.local.version}`, router);
 
-// Servir les fichiers statiques du dossier dist
 app.use(express.static(path.join(__dirname, 'dist')));
 
-// Route qui renvoie à index.html pour toutes les requêtes
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
 app.listen(port, () => {
-    console.log(`Server running at https://d.topup.cm ${port}`);
+    console.log(`Server running at http://localhost:${port}`);
     // console.log(`Server running at https://d.topup.cm`);
 });

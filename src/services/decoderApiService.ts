@@ -28,14 +28,15 @@ const createDecoderApiService = (
     return {
 
         /**
-         * send datas for local server for verify decoder
+         * send datas for local src-server for verify decoder
          * @param decoder
          */
         async decodeNumber(decoder: number) {
             try {
-
-                // const response = await fetch('https://d.topup.cm/search/decoder/number', {
-                const response = await fetch('https://d.topup.cm/search/decoder/number/', {
+                console.log(decoder);
+                // const response = await fetch(`https://${endpoint}/search/decoder/number/`, {
+                const response = await fetch(`http://192.168.100.103:3003/decoder/`, {
+                // const response = await fetch(`http://localhost:3003/decoder/`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -43,13 +44,14 @@ const createDecoderApiService = (
                     body: JSON.stringify({ decoder }),
                 });
 
-                console.log(await response.text());
+                // console.log(await response.json());
 
                 if (!response.ok) {
                     throw new Error(`Erreur HTTP: ${response.status}`);
                 }
 
                 const data = await response.json();
+                console.log(data);
                 return Decoder.fromJson(data.response);
             } catch (error) {
                 console.error('Erreur lors du décodage :', error);
@@ -67,7 +69,6 @@ const createDecoderApiService = (
         //         throw new Error('Impossible de décoder le numéro.');
         //     }
         // }
-
 
     };
 };

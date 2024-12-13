@@ -22,7 +22,9 @@ export default defineConfig({
         resolve(__dirname, 'src'),
         resolve(__dirname, 'public')
       ]
-    }
+    },
+      host: true,   // Permet l'accès via l'IP du serveur
+      port: 3002,   // Choisissez un port qui n'est pas occupé
   }
 })
 

@@ -64,12 +64,13 @@ const searchDecoder = async () => {
     const testDecoder = createDecoderApiService();
 
     const result =  await testDecoder.decodeNumber( parseInt(decoderNumber.value));
-
-    await router.push({
-      name: 'Subscriber',
-      query: { decoder: result.device.toString()  }
-      // query: { decoder: JSON.stringify(result)   }
-    });
+    if(result){
+      await router.push({
+        name: 'Subscriber',
+        query: { decoder: result.device.toString()  }
+        // query: { decoder: JSON.stringify(result)   }
+      });
+    }
     // Rest of the code remains the same...
   } catch (error) {
     console.error('Erreur lors de la recherche:', error);

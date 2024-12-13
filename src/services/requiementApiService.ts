@@ -28,22 +28,17 @@ const createRequiementApiService = (
          */
         async formuleOptions() {
             try {
-                const response = await fetch('https://d.topup.cm/requirement', {
+                const response = await fetch('http://192.168.100.103:3003/requirement', {
                     method: 'GET',
                     headers: {
                          'Content-Type': 'application/json',
                     },
                 });
-
                 if (!response.ok) {
                     throw new Error(`Erreur HTTP: ${response.status}`);
                 }
-
                 const data = await response.json();
-
-                // Crée un objet Requiement à partir du JSON
                 return Requiement.fromJson(data.response);
-
             } catch (error) {
                 console.error('Erreur lors de la recuperation des elements requis :', error);
                 throw new Error('Impossible de recuperer les elements.');

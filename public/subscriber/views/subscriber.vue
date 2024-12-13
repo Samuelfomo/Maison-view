@@ -475,8 +475,7 @@ export default defineComponent({
         const paymentResult = await subscription.payement(this.phoneNumber, parseInt(this.confirmationData.guid), this.confirmed);
         if (paymentResult.success) {
           // Payment successful
-          this.showMessage('Paiement réussi ! Transaction ID: ' + paymentResult.transactionId,'success');
-          // alert('Paiement réussi ! Transaction ID: ' + paymentResult.transactionId);
+          this.showMessage('Paiement en cours, vous allez recevoir le message de confirmation! Transaction ID: ' + paymentResult.transactionId,'success');
           this.showConfirmationModal = false;
         } else {
           // Payment failed
