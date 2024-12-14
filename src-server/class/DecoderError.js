@@ -1,8 +1,8 @@
-class DecoderErrors extends Error {
+class DecoderError extends Error {
     constructor(message) {
         super(message);
         this.name = 'DecoderError';
     }
 }
 
-module.exports = { DecoderErrors };
+module.exports = { DecoderErrors: DecoderError };

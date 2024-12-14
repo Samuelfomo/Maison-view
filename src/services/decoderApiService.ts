@@ -1,6 +1,6 @@
 import axios from 'axios';
 import type { AxiosInstance } from 'axios';
-import Decoder from "../data/class/Decoder";
+import Decoder from "../class/Decoder";
 
 interface DecoderApiService {
 
@@ -35,7 +35,7 @@ const createDecoderApiService = (
             try {
                 console.log(decoder);
                 // const response = await fetch(`https://${endpoint}/search/decoder/number/`, {
-                const response = await fetch(`http://192.168.100.103:3003/decoder/`, {
+                const response = await fetch(`http://192.168.100.103:3003/search/decoder/`, {
                 // const response = await fetch(`http://localhost:3003/decoder/`, {
                     method: 'POST',
                     headers: {

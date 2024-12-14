@@ -26,7 +26,7 @@
 // module.exports = router;
 
 const express = require('express');
-const RequirementSearch = require('../services/RequiementSearchs');
+const RequirementSearch = require('../services/RequiementSearch');
 const router = express.Router();
 
 const requirementSearch = new RequirementSearch();

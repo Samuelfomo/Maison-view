@@ -1,4 +1,4 @@
-import Requiement from "../data/class/Requiement";
+import Requiement from "../class/Requiement";
 import axios, {AxiosInstance} from "axios";
 
 interface DecoderApiService {
@@ -28,7 +28,7 @@ const createRequiementApiService = (
          */
         async formuleOptions() {
             try {
-                const response = await fetch('http://192.168.100.103:3003/requirement', {
+                const response = await fetch('http://192.168.100.103:3003/get/requirement', {
                     method: 'GET',
                     headers: {
                          'Content-Type': 'application/json',

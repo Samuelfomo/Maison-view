@@ -1,5 +1,5 @@
-const Option = require('./Options');
-const { Formula } = require('./Formulas');
+const Option = require('./Option');
+const { Formula } = require('./Formula');
 
 class Requirement {
     constructor(data) {

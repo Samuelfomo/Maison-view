@@ -47,7 +47,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import topup from '../../../src/assets/images/topup_logo.svg'
+import topup from '@/assets/images/topup_logo.svg'
 import createDecoderApiService from '@/services/decoderApiService'
 
 import { useRouter } from 'vue-router';

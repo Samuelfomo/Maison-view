@@ -67,6 +67,28 @@ class Requiement {
         return new Requiement(formules, options);
     }
 
+    // public static fromJson(json: any): Requiement {
+    //     console.log("Received JSON for Requiement:", json);
+    //     if (!json || typeof json !== 'object') {
+    //         throw new Error("Invalid JSON data: 'json' is undefined or not an object.");
+    //     }
+    //
+    //     const formules = json.formules
+    //         ? Array.isArray(json.formules)
+    //             ? json.formules.map((formuleData: any) => new Formules(formuleData.code, formuleData.name, formuleData.amount))
+    //             : new Formules(json.formules.code, json.formules.name, json.formules.amount)
+    //         : [];
+    //
+    //     const options = json.options
+    //         ? Array.isArray(json.options)
+    //             ? json.options.map((optionData: any) => new Options(optionData.code, optionData.name, optionData.amount))
+    //             : new Options(json.options.code, json.options.name, json.options.amount)
+    //         : null;
+    //
+    //     return new Requiement(formules, options);
+    // }
+
+
 }
 
 export default Requiement;

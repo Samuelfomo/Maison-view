@@ -1,6 +1,6 @@
 import axios from 'axios';
 import type { AxiosInstance } from 'axios';
-import PreSubscription from "../data/class/PreSubscription";
+import PreSubscription from "../class/PreSubscription";
 
 interface SubmitApiService {
 
@@ -34,7 +34,8 @@ const createSubmitApiService = (
          */
         async formSubmit(datas: PreSubscription) {
             try {
-                const response = await fetch('http://localhost:3003/subscription/renewal', {
+                const response = await fetch('http://192.168.100.103:3003/subscription/renewal/', {
+                // const response = await fetch('http://localhost:3003/subscription', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

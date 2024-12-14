@@ -1,6 +1,6 @@
 import axios from 'axios';
 import type { AxiosInstance } from 'axios';
-import Shortlink from "../data/class/Shortlink";
+import Shortlink from "../class/Shortlink";
 
 
 interface ShortlinkApiService {
@@ -32,12 +32,12 @@ const createShortlinkApiService = (
          */
         async getshortlink(shortlink: string) {
             try {
-                const response = await fetch('http://192.168.100.103:3003/shortlink', {
+                const response = await fetch('http://192.168.100.103:3003/shortlink/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ shortlink: shortlink }),
+                    body: JSON.stringify({ shortlink }),
                 });
 
                 if (!response.ok) {

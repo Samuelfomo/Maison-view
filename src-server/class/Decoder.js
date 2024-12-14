@@ -1,6 +1,6 @@
-const { DecoderError } = require('./DecoderErrors');
-const { Subscriber } = require('./Subscribers');
-const { Formula } = require('./Formulas');
+const { DecoderError } = require('./DecoderError');
+const { Subscriber } = require('./Subscriber');
+const { Formula } = require('./Formula');
 
 class Decoder {
 

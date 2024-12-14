@@ -28,7 +28,7 @@
 //
 // module.exports = RequiementSearch;
 const config = require('../utils/defaults');
-const Requirement = require('../class/Requiements');
+const Requirement = require('../class/Requiement');
 const axios = require('axios');
 
 class RequirementSearch {
@@ -52,8 +52,10 @@ class RequirementSearch {
             }
 
             console.log(response.data.response);
+            // console.log(response.data)
 
-            return new Requirement(response.data);
+            // return new Requirement(response.data);
+            return response.data;
 
         } catch (error) {
             if (error.response) {

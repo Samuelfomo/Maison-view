@@ -1,5 +1,5 @@
-const DecoderSearch = require('../services/DecoderSearchs');
-const DecoderErrors = require('../class/DecoderErrors');
+const DecoderSearch = require('../services/DecoderSearch');
+const DecoderErrors = require('../class/DecoderError');
 
 const express = require('express');
 
@@ -8,8 +8,11 @@ const decoderSearch = new DecoderSearch();
 
 router.post('/:decoderData', async (req, res) => {
     const data = req.body.decoder;
+    if (!data){
+        return res.status(400).json({ message: 'The field \'Decoder\' is mandatory!' });
+    }
 
-    console.log(`\n🔍 Recherche 02 du décodeur:`,data);
+    console.log(`\n🔍 Recherche 12 du décodeur :`,data);
     try {
         const decoder = await decoderSearch.search(data);
         if (!decoder) {

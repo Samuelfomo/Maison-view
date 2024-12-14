@@ -277,7 +277,7 @@
 
 <script lang="ts">
 import {defineComponent, ref} from 'vue'
-import {Alert} from '@/data/class/PreSubscription'
+import {Alert} from '@/class/PreSubscription'
 import router from '../../../src/router'
 import mtnLogo from '../../../src/assets/images/mtn-logo.png'
 import orangeLogo from '../../../src/assets/images/orange-logo.png'
@@ -289,7 +289,7 @@ import createShortlinkApiService from '@/services/shortlinkApiService'
 import createRequiementApiService from '@/services/requiementApiService'
 import createSubscriptionApiService from '@/services/submitApiService'
 
-import PreSubscription from '@/data/class/PreSubscription'
+import PreSubscription from '@/class/PreSubscription'
 
 const testDecoder = createDecoderApiService(
     import.meta.env.VITE_API_URL,

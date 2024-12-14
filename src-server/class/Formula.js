@@ -1,4 +1,4 @@
-const Option = require('./Options');
+const Option = require('./Option');
 
 class Formula {
     constructor(data) {
