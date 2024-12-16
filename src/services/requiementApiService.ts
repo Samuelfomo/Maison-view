@@ -28,7 +28,8 @@ const createRequiementApiService = (
          */
         async formuleOptions() {
             try {
-                const response = await fetch('http://192.168.100.103:3003/get/requirement', {
+                // const response = await fetch('http://192.168.100.103:3003/get/requirement', {
+                const response = await fetch('http://localhost:5000/get/requirement', {
                     method: 'GET',
                     headers: {
                          'Content-Type': 'application/json',

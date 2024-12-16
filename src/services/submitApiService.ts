@@ -34,8 +34,8 @@ const createSubmitApiService = (
          */
         async formSubmit(datas: PreSubscription) {
             try {
-                const response = await fetch('http://192.168.100.103:3003/subscription/renewal/', {
-                // const response = await fetch('http://localhost:3003/subscription', {
+                // const response = await fetch('http://192.168.100.103:3003/subscription/renewal/', {
+                const response = await fetch('http://localhost:5000/subscription/renewal', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -65,8 +65,8 @@ const createSubmitApiService = (
         async payement(phoneNumber: string, guid: number, confirmed: boolean) {
             try {
                 console.log('confirmation',confirmed);
-                // const response = await fetch('http://localhost:3003/subscription/confirm/', {
-                const response = await fetch('http://192.168.100.103:3003/subscription/confirm/', {
+                const response = await fetch('http://localhost:5000/subscription/confirm/', {
+                // const response = await fetch('http://192.168.100.103:3003/subscription/confirm/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

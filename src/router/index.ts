@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Subscriber from "../../public/subscriber/views/subscriber.vue";
-import Home from "../../public/subscriber/views/home.vue";
-
+import Subscriber from "../../public/subscriber.vue";
+import Home from "../../public/home.vue";
 const routes = [
 
     {

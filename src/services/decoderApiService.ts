@@ -34,9 +34,8 @@ const createDecoderApiService = (
         async decodeNumber(decoder: number) {
             try {
                 console.log(decoder);
-                // const response = await fetch(`https://${endpoint}/search/decoder/number/`, {
-                const response = await fetch(`http://192.168.100.103:3003/search/decoder/`, {
-                // const response = await fetch(`http://localhost:3003/decoder/`, {
+                // const response = await fetch(`http://192.168.100.103:3003/search/decoder/`, {
+                const response = await fetch(`http://localhost:5000/search/decoder/`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

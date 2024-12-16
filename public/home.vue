@@ -1,4 +1,23 @@
 <template>
+
+  <div class="fixed top-4 right-4 z-50 name">
+    <TransitionGroup v-if="alerts && alerts.length > 0" tag="div" name="alert">
+      <div
+          v-for="alert in alerts"
+          :key="alert.id"
+          :class="{
+      'bg-green-500 text-white': alert.type === 'success',
+      'bg-red-500 text-white': alert.type === 'error',
+      'bg-yellow-500 text-black': alert.type === 'warning',
+      'px-9 py-5 rounded shadow-lg mb-2': true
+    }"
+      >
+        <strong>{{ alert.title }}:</strong> {{ alert.message }}
+        <button @click="removeAlert(Number(alert.id))" class="ml-2 text-xs text-gray-200">X</button>
+      </div>
+    </TransitionGroup>
+  </div>
+
   <div class="min-h-screen bg-gray-100 flex items-center justify-center p-2">
     <div
         v-if="isLoading"
@@ -45,22 +64,33 @@
 
 </template>
 
-<script setup>
+<script setup lang="ts" >
 import { ref } from 'vue'
 import topup from '@/assets/images/topup_logo.svg'
 import createDecoderApiService from '@/services/decoderApiService'
-
+import type {Alert} from '@/class/PreSubscription'
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
 const decoderNumber = ref('');
-const isLoading = ref(false)
+const isLoading = ref(false);
+const alerts = ref<Alert[]>([]);
+
 
 const searchDecoder = async () => {
   isLoading.value = true
 
   try {
+    if (!decoderNumber) {
+      showMessage('Please enter a decoder number', 'warning');
+      return null;
+    }
+
+    if (!/^\d{14}$/.test(decoderNumber.value)) {
+      showMessage('Decoder number must be a numeric value of exactly 14 digits', 'warning');
+      return null;
+    }
     const testDecoder = createDecoderApiService();
 
     const result =  await testDecoder.decodeNumber( parseInt(decoderNumber.value));
@@ -71,13 +101,47 @@ const searchDecoder = async () => {
         // query: { decoder: JSON.stringify(result)   }
       });
     }
+    else{
+      showMessage('No decoder found', 'error');
+    }
     // Rest of the code remains the same...
   } catch (error) {
-    console.error('Erreur lors de la recherche:', error);
+    showMessage('Erreur lors de la recherche:', 'error');
+    console.error(error);
   } finally {
     isLoading.value = false;
   }
 }
+
+const getAlertTitle = (type: 'success' | 'warning' | 'error'): string => {
+  switch(type) {
+    case 'success': return 'Succès';
+    case 'warning': return 'Attention';
+    case 'error': return 'Erreur';
+    default: return '';
+  }
+};
+
+const showMessage = (msg: string, type: 'success' | 'warning' | 'error' = 'success') => {
+  if (alerts.value.some(alert => alert.message === msg)) return;
+
+  const id = Date.now();
+  alerts.value.push({
+    id,
+    title: getAlertTitle(type),
+    message: msg,
+    type: type
+  });
+
+  setTimeout(() => {
+    removeAlert(id);
+  }, 3000);
+};
+
+
+const removeAlert = (id: string | number) => {
+  alerts.value = alerts.value.filter(alert => alert.id !== id);
+};
 
 </script>
 

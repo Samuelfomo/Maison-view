@@ -12,7 +12,7 @@ router.post('/:decoderData', async (req, res) => {
         return res.status(400).json({ message: 'The field \'Decoder\' is mandatory!' });
     }
 
-    console.log(`\n🔍 Recherche 12 du décodeur :`,data);
+    console.log(`\n🔍 Recherche du décodeur :`,data);
     try {
         const decoder = await decoderSearch.search(data);
         if (!decoder) {

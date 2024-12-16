@@ -10,7 +10,7 @@ const routerSubscriber = require("./src-server/routes/subscription-router");
 
 
 const app = express();
-const port = process.env.PORT || 3003;
+const port = process.env.PORT || 5000;
 
 app.use(cors());
 
@@ -29,6 +29,6 @@ app.get('*', (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
+    console.log(`Server running at http://localhost`);
     // console.log(`Server running at https://d.topup.cm`);
 });

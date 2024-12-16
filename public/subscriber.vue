@@ -206,7 +206,7 @@
 
       <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 
-      <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-md sm:w-full">
+      <div class="inline-block align-bottom bg-white rounded-lg border-gray-300  text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-md sm:w-full">
         <!-- En-tête -->
         <div class="bg-black text-white text-center py-3">
           <h3 class="text-2xl font-bold font-roboto">Confirmer l’opération</h3>
@@ -216,26 +216,31 @@
         <div class="bg-white px-6 py-4">
           <div class="space-y-4">
             <div class="flex justify-between items-center">
-              <p class="font-medium  text-gray-700 font-patrick-hand text-lg">Décodeur :</p>
-              <p class="font-bold font-roboto">{{ confirmationData.decoder }}</p>
+              <p class="font-bold  text-gray-700 font-roboto text-lg">Décodeur</p>
+              <span class="font-bold text-gray-700 font-roboto text-lg flex-1 pl-1 relative">:</span>
+              <p class="font-medium font-roboto text-md text-black">{{ confirmationData.decoder }}</p>
             </div>
             <div class="flex justify-between items-center">
-              <p class="font-medium text-gray-700 font-patrick-hand text-lg">Formule :</p>
-              <p class="font-bold font-roboto">{{ confirmationData.formula }}</p>
+              <p class="font-bold text-gray-700 font-roboto text-lg">Formule</p>
+              <span class="font-bold text-gray-700 font-roboto text-lg flex-1 pl-4 relative">:</span>
+              <p class=" font-medium font-roboto">{{ confirmationData.formula }}</p>
             </div>
             <div class="flex justify-between items-center">
-              <p class="font-medium text-gray-700 font-patrick-hand text-lg">Durée :</p>
-              <p class="font-bold font-roboto">{{ confirmationData.duration }} mois</p>
+              <p class="font-bold text-gray-700 font-roboto text-lg">Durée</p>
+              <span class="font-bold text-gray-700 font-roboto text-lg flex-1 pl-9 relative">:</span>
+              <p class=" font-medium font-roboto">{{ confirmationData.duration }} mois</p>
             </div>
             <div class="flex justify-between items-center">
-              <p class="font-medium text-gray-700 font-patrick-hand text-lg">Options :</p>
-              <ul class="font-bold font-roboto">
-                <li v-for="option in confirmationData.options" :key="option">{{ option }}</li>
+              <p class=" font-bold text-gray-700 font-roboto text-lg">Options</p>
+              <span class="font-bold text-gray-700 font-roboto text-lg flex-1 pl-5 relative">:</span>
+              <ul class=" justify-items-end pl-10 space-y-2">
+                <li v-for="option in confirmationData.options" :key="option" class="font-medium font-roboto ">{{ option }}</li>
               </ul>
             </div>
             <div class="flex justify-between items-center">
-              <p class="font-medium text-gray-700 font-patrick-hand text-lg">Total :</p>
-              <p class="font-bold font-roboto text-xl">{{ formatTotalAmount(confirmationData.total) }}</p>
+              <p class="font-bold text-gray-700 font-roboto text-lg">Total</p>
+              <span class="font-bold text-gray-700 font-roboto text-lg flex-1 pl-12 relative">:</span>
+              <p class=" font-medium font-roboto text-lg">{{ formatTotalAmount(confirmationData.total) }}</p>
             </div>
           </div>
         </div>
@@ -245,9 +250,9 @@
         </div>
 
         <!-- Pied de page -->
-        <div class=" px-4 py-3 flex justify-between items-center font-patrick-hand">
+        <div class=" px-4 py-3 flex justify-between items-center font-patrick-hand  border-b border-t border-gray-300">
           <p class="text-sm text-gray-600">
-            La somme de <span class="font-bold">{{ formatTotalAmount(confirmationData.total) }}</span>
+            La somme de <span class="font-bold text-lg">{{ formatTotalAmount(confirmationData.total) }}</span>
             (<span class="italic">{{ convertNumberToWords(confirmationData.total) }}</span>)
             sera débitée de votre compte.
           </p>
@@ -278,9 +283,9 @@
 <script lang="ts">
 import {defineComponent, ref} from 'vue'
 import {Alert} from '@/class/PreSubscription'
-import router from '../../../src/router'
-import mtnLogo from '../../../src/assets/images/mtn-logo.png'
-import orangeLogo from '../../../src/assets/images/orange-logo.png'
+import router from '@/router'
+import mtnLogo from '@/assets/images/mtn-logo.png'
+import orangeLogo from '@/assets/images/orange-logo.png'
 
 
 import { useRoute } from 'vue-router';
