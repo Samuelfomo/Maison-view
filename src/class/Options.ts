@@ -21,6 +21,14 @@
             json.amount
         );
     }
-}
+
+     map(param: (option) => string) {
+         return [];
+     }
+
+     reduce(param: (acc, option) => any, param2: {}) {
+         return undefined;
+     }
+ }
 
 export default Options;

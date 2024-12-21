@@ -5,17 +5,12 @@ import { resolve } from 'path'
 
 export default defineConfig({
   plugins: [vue()],
-  // build: {
-  //   target: 'es2015'
-  // },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
-      // Alias optionnel pour public
       '@public': fileURLToPath(new URL('./public', import.meta.url))
     }
   },
-  // Support pour les imports depuis public
   server: {
     fs: {
       allow: [
@@ -23,43 +18,54 @@ export default defineConfig({
         resolve(__dirname, 'public')
       ]
     },
-      host: true,   // Permet l'accès via l'IP du serveur
-      port: 3002,   // Choisissez un port qui n'est pas occupé
+    open: true,
+    host: true,
+    port: 5173
+    // proxy: {
+    //   '/api': {
+    //     target: 'http://localhost:5000',
+    //     // target: 'https://d.topup.cm',
+    //     changeOrigin: true,
+    //     rewrite: (path) => path.replace(/^\/api/, '')
+    //   }
+    // }
+  },
+  // Ajoutez cette section pour la production
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            return 'vendor';
+          }
+        }
+      }
+    }
   }
 })
 
-
+// import { fileURLToPath, URL } from 'node:url'
 // import { defineConfig } from 'vite'
 // import vue from '@vitejs/plugin-vue'
-// import path from 'path'
+// import { resolve } from 'path'
 //
 // export default defineConfig({
 //   plugins: [vue()],
-//   base: '/',
-//   build: {
-//     outDir: 'dist',
-//     assetsDir: 'assets',
-//     manifest: true,
-//     rollupOptions: {
-//       input: path.resolve(__dirname, 'index.html'),
-//     },
-//   },
-// })
-
-// import { fileURLToPath, URL } from 'node:url'
-//
-// import { defineConfig } from 'vite'
-// import vue from '@vitejs/plugin-vue'
-// import vueDevTools from 'vite-plugin-vue-devtools'
-//
-// export default defineConfig({
-//   plugins: [
-//     vue(),
-//     vueDevTools(),
-//   ],
 //   resolve: {
 //     alias: {
-//       '@': fileURLToPath(new URL('./src', import.meta.url))
-//     },
+//       '@': fileURLToPath(new URL('./src', import.meta.url)),
+//       '@public': fileURLToPath(new URL('./public', import.meta.url))
+//     }
 //   },
+//   server: {
+//     fs: {
+//       allow: [
+//         resolve(__dirname, 'src'),
+//         resolve(__dirname, 'public')
+//       ]
+//     },
+//       open: true,
+//       host: true,
+//       port: 5000,
+//   }
 // })

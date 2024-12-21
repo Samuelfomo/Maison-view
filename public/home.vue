@@ -6,7 +6,7 @@
           v-for="alert in alerts"
           :key="alert.id"
           :class="{
-      'bg-green-500 text-white': alert.type === 'success',
+      'bg-green-500 text-white font-bold': alert.type === 'success',
       'bg-red-500 text-white': alert.type === 'error',
       'bg-yellow-500 text-black': alert.type === 'warning',
       'px-9 py-5 rounded shadow-lg mb-2': true
@@ -67,7 +67,7 @@
 <script setup lang="ts" >
 import { ref } from 'vue'
 import topup from '@/assets/images/topup_logo.svg'
-import createDecoderApiService from '@/services/decoderApiService'
+import createDecoderApiService from '@/repository/decoderApiService'
 import type {Alert} from '@/class/PreSubscription'
 import { useRouter } from 'vue-router';
 
@@ -106,7 +106,7 @@ const searchDecoder = async () => {
     }
     // Rest of the code remains the same...
   } catch (error) {
-    showMessage('Erreur lors de la recherche:', 'error');
+    showMessage('Error during search:', 'error');
     console.error(error);
   } finally {
     isLoading.value = false;

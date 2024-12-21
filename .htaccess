@@ -1,8 +1,65 @@
-<IfModule mod_rewrite.c>
-  RewriteEngine On
-  RewriteBase /
-  RewriteRule ^index\.html$ - [L]
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule . /index.html [L]
-</IfModule>
+#<IfModule mod_rewrite.c>
+#  RewriteEngine On
+#  RewriteBase /
+#  RewriteRule ^index\.html$ - [L]
+#  RewriteCond %{REQUEST_FILENAME} !-f
+#  RewriteCond %{REQUEST_FILENAME} !-d
+#  RewriteRule . /index.html [L]
+#</IfModule>
+
+#<IfModule mod_rewrite.c>
+#  RewriteEngine On
+#  RewriteBase /
+#
+#  RewriteCond %{REQUEST_FILENAME} !-f
+#  RewriteCond %{REQUEST_FILENAME} !-d
+#
+#  RewriteRule ^(.*\.(css|js|jpg|jpeg|png|gif|bmp|svg|woff|woff2|eot|ttf|otf))$ - [L]
+#
+#  RewriteRule ^(.*)$ https://d.topup.cm/$1 [P,L]
+#
+#  RewriteRule ^index\.html$ - [L]
+#  RewriteCond %{REQUEST_FILENAME} !-f
+#  RewriteCond %{REQUEST_FILENAME} !-d
+#  RewriteRule . /index.html [L]
+#</IfModule>
+
+
+#<IfModule mod_rewrite.c>
+#  RewriteEngine On
+#  RewriteBase /
+#
+#  # Ne pas rediriger les requêtes API
+#  RewriteRule ^search/ - [L]
+#  RewriteRule ^get/ - [L]
+#  RewriteRule ^subscription/ - [L]
+#
+#  # Règles pour l'application Vue.js
+#  RewriteRule ^index\.html$ - [L]
+#  RewriteCond %{REQUEST_FILENAME} !-f
+#  RewriteCond %{REQUEST_FILENAME} !-d
+#  RewriteRule . /index.html [L]
+#</IfModule>
+
+#<IfModule mod_rewrite.c>
+#  # Active le moteur de réécriture d'URL
+#  RewriteEngine On
+#  # Définit le répertoire de base pour les règles
+#  RewriteBase /
+#
+#  # Ne redirige pas les fichiers et dossiers existants
+#  RewriteCond %{REQUEST_FILENAME} !-f
+#  RewriteCond %{REQUEST_FILENAME} !-d
+#
+#  # Règle 1 : Laisse passer directement les fichiers statiques
+#  RewriteRule ^(.*\.(css|js|jpg|jpeg|png|gif|bmp|svg|woff|woff2|eot|ttf|otf))$ - [L]
+#
+#  # Règle 2 : Redirige toutes les autres requêtes vers votre serveur Node.js
+#  RewriteRule ^(.*)$ https://66.179.251.205:5000/$1 [P,L]
+#
+#  # Règles pour l'application SPA (Single Page Application)
+#  RewriteRule ^index\.html$ - [L]
+#  RewriteCond %{REQUEST_FILENAME} !-f
+#  RewriteCond %{REQUEST_FILENAME} !-d
+#  RewriteRule . /index.html [L]
+#</IfModule>

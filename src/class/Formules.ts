@@ -21,6 +21,14 @@ class Formules {
             json.amount
         )
 }
+
+    reduce(param: (acc, formula) => any, param2: {}) {
+        return undefined;
+    }
+
+    map(param: (formula) => string) {
+        return [];
+    }
 }
 
 

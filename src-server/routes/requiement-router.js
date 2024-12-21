@@ -1,5 +1,5 @@
 // const express = require('express');
-// const RequiementSearch = require('../services/RequiementSearchs');
+// const RequiementSearch = require('../repository/RequiementSearchs');
 // const router = express.Router();
 //
 // const requiementSearch = new RequiementSearch();

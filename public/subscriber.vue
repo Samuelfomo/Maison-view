@@ -36,8 +36,8 @@
       </div>
       <div class="bg-white shadow-lg shadow-gray-600 rounded-b-lg w-full max-w-md p-3">
 
-        <div class="space-y-1 mb-8">
-          <h6 class="text-lg font-patrick-hand" style="color: #FF4200">Votre decodeur</h6>
+        <div class="space-y-1 mb-8 pt-3">
+          <h6 class="text-lg font-patrick-hand " style="color: #FF4200">Votre decodeur</h6>
           <div class="bg-white shadow-sm rounded-lg overflow-hidden">
             <!-- Header -->
             <div class="bg-gray-200 p-2 border-gray-400 border-b-2">
@@ -147,7 +147,6 @@
             <input type="number" name="merchant" id="merchant" value="" v-model="merchant" disabled>
           </div>
 
-
           <!-- Durée d'Abonnement -->
           <div>
             <label class="block text-lg font-patrick-hand text-gray-700" style="color: #FF4200">Choisir la durée (Mois)</label>
@@ -217,29 +216,24 @@
           <div class="space-y-4">
             <div class="flex justify-between items-center">
               <p class="font-bold  text-gray-700 font-roboto text-lg">Décodeur</p>
-              <span class="font-bold text-gray-700 font-roboto text-lg flex-1 pl-1 relative">:</span>
               <p class="font-medium font-roboto text-md text-black">{{ confirmationData.decoder }}</p>
             </div>
             <div class="flex justify-between items-center">
               <p class="font-bold text-gray-700 font-roboto text-lg">Formule</p>
-              <span class="font-bold text-gray-700 font-roboto text-lg flex-1 pl-4 relative">:</span>
               <p class=" font-medium font-roboto">{{ confirmationData.formula }}</p>
             </div>
             <div class="flex justify-between items-center">
               <p class="font-bold text-gray-700 font-roboto text-lg">Durée</p>
-              <span class="font-bold text-gray-700 font-roboto text-lg flex-1 pl-9 relative">:</span>
               <p class=" font-medium font-roboto">{{ confirmationData.duration }} mois</p>
             </div>
             <div class="flex justify-between items-center">
               <p class=" font-bold text-gray-700 font-roboto text-lg">Options</p>
-              <span class="font-bold text-gray-700 font-roboto text-lg flex-1 pl-5 relative">:</span>
               <ul class=" justify-items-end pl-10 space-y-2">
                 <li v-for="option in confirmationData.options" :key="option" class="font-medium font-roboto ">{{ option }}</li>
               </ul>
             </div>
             <div class="flex justify-between items-center">
               <p class="font-bold text-gray-700 font-roboto text-lg">Total</p>
-              <span class="font-bold text-gray-700 font-roboto text-lg flex-1 pl-12 relative">:</span>
               <p class=" font-medium font-roboto text-lg">{{ formatTotalAmount(confirmationData.total) }}</p>
             </div>
           </div>
@@ -251,8 +245,8 @@
 
         <!-- Pied de page -->
         <div class=" px-4 py-3 flex justify-between items-center font-patrick-hand  border-b border-t border-gray-300">
-          <p class="text-sm text-gray-600">
-            La somme de <span class="font-bold text-lg">{{ formatTotalAmount(confirmationData.total) }}</span>
+          <p class="text-gray-950 font-roboto">
+            La somme de <span class="font-bold text-lg italic">{{ formatTotalAmount(confirmationData.total) }}</span>
             (<span class="italic">{{ convertNumberToWords(confirmationData.total) }}</span>)
             sera débitée de votre compte.
           </p>
@@ -289,18 +283,14 @@ import orangeLogo from '@/assets/images/orange-logo.png'
 
 
 import { useRoute } from 'vue-router';
-import createDecoderApiService from '@/services/decoderApiService'
-import createShortlinkApiService from '@/services/shortlinkApiService'
-import createRequiementApiService from '@/services/requiementApiService'
-import createSubscriptionApiService from '@/services/submitApiService'
+import createDecoderApiService from '@/repository/decoderApiService'
+import createShortlinkApiService from '@/repository/shortlinkApiService'
+import createRequiementApiService from '@/repository/requiementApiService'
+import createSubscriptionApiService from '@/repository/submitApiService'
 
 import PreSubscription from '@/class/PreSubscription'
 
-const testDecoder = createDecoderApiService(
-    import.meta.env.VITE_API_URL,
-    import.meta.env.VITE_API_KEY,
-    import.meta.env.VITE_API_SECRET
-);
+const testDecoder = createDecoderApiService();
 
 const testShortlink = createShortlinkApiService();
 
@@ -336,7 +326,7 @@ export default defineComponent({
       mobileOperator: null as MobileOperator,
 
       // Liste des mois d'abonnement disponibles
-      subscriptionMonths: ['01', '03', '06', '12', '24'] as string[],
+      subscriptionMonths: ['01', '03', '06', '12'] as string[],
 
       decoderCode: '',
       decoderFormula: '',
@@ -464,12 +454,12 @@ export default defineComponent({
           console.log('guid',this.confirmationData.guid, 'phone', this.phoneNumber)
         }
         else {
-          this.showMessage('La pré-inscription a réussi mais la confirmation est impossible', 'error');
+          this.showMessage('Your subscription has been successfully set up, but confirmation is not possible.', 'error');
         }
 
       } catch (error: unknown) {
         const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue';
-        this.showMessage(`Échec de la pré-inscription : ${errorMessage}`, 'error');
+        this.showMessage(`Unsuccessful subscription preparation : ${errorMessage}`, 'error');
       }
     },
 
@@ -480,16 +470,16 @@ export default defineComponent({
         const paymentResult = await subscription.payement(this.phoneNumber, parseInt(this.confirmationData.guid), this.confirmed);
         if (paymentResult.success) {
           // Payment successful
-          this.showMessage('Paiement en cours, vous allez recevoir le message de confirmation! Transaction ID: ' + paymentResult.transactionId,'success');
+          this.showMessage('Payment in progress, you will receive the confirmation message!','success');
           this.showConfirmationModal = false;
         } else {
           // Payment failed
-          this.showMessage('Échec du paiement : ' + paymentResult.message, 'error');
+          this.showMessage('Payment failure : ' + paymentResult.message, 'error');
         }
         await this.clearSubscription();
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue';
-        this.showMessage(`Échec du paiement : ${errorMessage}`, 'error');
+        this.showMessage(`Payment failure : ${errorMessage}`, 'error');
       }
       finally {
         // Reset confirmed to false after the operation
@@ -519,6 +509,7 @@ export default defineComponent({
       })
     },
 
+    // get elements
     async getrequiement() {
       this.isLoading = true;
       try {
@@ -542,8 +533,8 @@ export default defineComponent({
         }, {});
         this.isLoading = false;
       } catch (error) {
-        this.showMessage('Erreur lors de la récupération des données', error, 'error');
-        console.error('Erreur lors de la récupération des données', error);
+        this.showMessage('Data recovery error', error, 'error');
+        console.error('Data recovery error', error);
       }
     },
 
@@ -554,23 +545,20 @@ export default defineComponent({
       return foundFormula ? (foundFormula.code) : null;
     },
 
-    getBouquetCode(): string[] | null {
-      return this.selectedbouquets.map(bouquet => {
-        const foundBouquet = this.resultrequis.options.find(
-            o => o.name === bouquet
-        );
-        return foundBouquet ? foundBouquet.code : null;
-      }).filter(code => code !== null);
+    getBouquetCode(bouquet: string): string | null {
+      const foundBouquet = this.resultrequis.options.find(
+          o => o.name === bouquet
+      );
+      return foundBouquet ? foundBouquet.code : null;
     },
 
+    //alert message
     showMessage(msg: string, type: 'success' | 'warning' | 'error' = 'success') {
-      // Évite les doublons de message
       if (this.alerts.some(alert => alert.message === msg)) return;
-
       const id = Date.now();
       this.alerts.push({
         id,
-        title: this.getAlertTitle(type), // Titre dynamique basé sur le type
+        title: this.getAlertTitle(type),
         message: msg,
         type: type
       });
@@ -679,12 +667,18 @@ export default defineComponent({
       this.selectedFormula = '';
       this.selectedbouquets = [];
       this.selectedDuration = '01';
-      this.formattedExpiryDate = '';
-      this.subscriberName = '';
-      this.decoderCode = '';
-      this.decoderFormula = '';
+      this.confirmed = null;
+      this.confirmationData = {
+        formula: '',
+        options: [],
+        duration: '',
+        expiryDate: '',
+        total: 0,
+        phoneNumber: '',
+        merchant: '',
+        decoder: '',
+      }
     }
-
   },
 
  props: {
@@ -724,7 +718,7 @@ export default defineComponent({
 
       if (this.shortlink.length === 14) {
         try {
-          console.log('le numero de decodeur est :', this.shortlink);
+          console.log('decoder number is :', this.shortlink);
           const result = await testDecoder.decodeNumber(Number(this.shortlink));
           console.log(result.finished);
           if (result) {
@@ -776,4 +770,3 @@ export default defineComponent({
   }
 })
 </script>
-

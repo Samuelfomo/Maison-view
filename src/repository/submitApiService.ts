@@ -9,22 +9,7 @@ interface SubmitApiService {
     payement(phoneNumber: string, guid: number, confirmed: boolean): Promise<any>;
 }
 
-const createSubmitApiService = (
-    endpoint: string = import.meta.env.VITE_API_URL as string,
-    username: string = import.meta.env.VITE_API_KEY as string,
-    password: string = import.meta.env.VITE_API_SECRET as string
-): SubmitApiService => {
-    // Crée un client Axios configuré
-    const apiClient: AxiosInstance = axios.create({
-        baseURL: `https://${endpoint}/presubmit/`,
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        auth: {
-            username,
-            password,
-        },
-    });
+const createSubmitApiService = (): SubmitApiService => {
 
     return {
         /**
@@ -34,8 +19,7 @@ const createSubmitApiService = (
          */
         async formSubmit(datas: PreSubscription) {
             try {
-                // const response = await fetch('http://192.168.100.103:3003/subscription/renewal/', {
-                const response = await fetch('http://localhost:5000/subscription/renewal', {
+                const response = await fetch('https://d.topup.cm/subscription/renewal/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -56,8 +40,8 @@ const createSubmitApiService = (
                 const data = await response.json();
                 return PreSubscription.fromJson(data.response);
             } catch (error) {
-                console.error('Erreur lors de l\'envoi des donnees :', error);
-                throw new Error('Impossible d\'envoyer les donnees.');
+                console.error('Error sending data :', error);
+                throw new Error('Cannot send data.');
             }
         },
 
@@ -65,8 +49,10 @@ const createSubmitApiService = (
         async payement(phoneNumber: string, guid: number, confirmed: boolean) {
             try {
                 console.log('confirmation',confirmed);
-                const response = await fetch('http://localhost:5000/subscription/confirm/', {
-                // const response = await fetch('http://192.168.100.103:3003/subscription/confirm/', {
+
+                const response = await fetch('https://d.topup.cm/subscription/confirm/', {
+                    // const response = await fetch('api/subscription/confirm/', {
+                // const response = await fetch('https://66.179.251.205:5000/subscription/confirm/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -79,24 +65,27 @@ const createSubmitApiService = (
                 });
 
                 if (!response.ok) {
-                    throw new Error(`Erreur de paiement: ${response.status}`);
+                    const errorText = await response.text();
+                    console.error('incorrect answer:', response.status, errorText);
+                    throw new Error(`Erreur HTTP: ${response.status}`);
                 }
+
                 const data = await response.json();
                 if (data.status === 1) {
                     return {
                         success: true,
                         transactionId: guid || null,
-                        message: 'Paiement réussi'
+                        message: 'Successful payment'
                     };
                 } else {
                     return {
                         success: false,
-                        message: data.message || 'Échec du paiement'
+                        message: data.message || 'Payment failed'
                     };
                 }
             } catch (error) {
-                console.error('Erreur lors du paiement :', error);
-                throw new Error('Impossible de traiter le paiement.');
+                console.error('Error during payment :', error);
+                throw new Error('Impossible to process payment.');
             }
         }
 

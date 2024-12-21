@@ -38,10 +38,8 @@ class RenewSubscription {
                 }
             });
             // return new Subscription(response.data);
-
             console.log('API response:', response.data);
             return response.data;
-
         } catch (error) {
             console.error('Subscription confirm failure :', error);
             return null;
