@@ -4,6 +4,8 @@ interface DecoderApiService {
     formuleOptions(): Promise<Requiement>;
 }
 
+const host = import.meta.env.VITE_API_URL_VU;
+
 const createRequiementApiService = (): DecoderApiService => {
     return {
 
@@ -12,7 +14,7 @@ const createRequiementApiService = (): DecoderApiService => {
          */
         async formuleOptions() {
             try {
-                const response = await fetch('https://d.topup.cm/get/requirement', {
+                const response = await fetch(`https://${host}/get/requirement`, {
                     method: 'GET',
                     headers: {
                          'Content-Type': 'application/json',

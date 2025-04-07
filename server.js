@@ -39,8 +39,7 @@ app.get('*', (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`Server running at https://${host}:${port}`);
-    // console.log(`Server running at https://d.topup.cm`);
+    console.log(`Server running at https://${host}`);
 });
 // const server = http.createServer(app);
 // server.listen(port, ()=> console.log(`Server running at http://localhost:${port}`));

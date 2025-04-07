@@ -21,7 +21,7 @@
   <div class="min-h-screen bg-gray-100 flex items-center justify-center p-2">
     <div
         v-if="isLoading"
-        class="fixed inset-0 flex items-center justify-center bg-gray-50 bg-opacity-50 backdrop-blur-sm">
+        class="fixed inset-0 flex items-center justify-center bg-gray-400 bg-opacity-50 backdrop-blur-sm z-10">
       <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-orange-500"></div>
       <p class="ml-4 font-medium" style="color: #FF4200">Chargement...</p>
     </div>

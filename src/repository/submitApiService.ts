@@ -1,5 +1,3 @@
-import axios from 'axios';
-import type { AxiosInstance } from 'axios';
 import PreSubscription from "../class/PreSubscription";
 
 interface SubmitApiService {
@@ -8,6 +6,7 @@ interface SubmitApiService {
 
     payement(phoneNumber: string, guid: number, confirmed: boolean): Promise<any>;
 }
+const host = import.meta.env.VITE_API_URL_VU;
 
 const createSubmitApiService = (): SubmitApiService => {
 
@@ -19,7 +18,7 @@ const createSubmitApiService = (): SubmitApiService => {
          */
         async formSubmit(datas: PreSubscription) {
             try {
-                const response = await fetch('https://d.topup.cm/subscription/renewal/', {
+                const response = await fetch(`https://${host}/subscription/renewal/`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -50,7 +49,7 @@ const createSubmitApiService = (): SubmitApiService => {
             try {
                 console.log('confirmation',confirmed);
 
-                const response = await fetch('https://d.topup.cm/subscription/confirm/', {
+                const response = await fetch(`https://${host}/subscription/confirm/`, {
                     // const response = await fetch('api/subscription/confirm/', {
                 // const response = await fetch('https://66.179.251.205:5000/subscription/confirm/', {
                     method: 'POST',

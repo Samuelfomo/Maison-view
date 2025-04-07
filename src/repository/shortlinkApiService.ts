@@ -3,6 +3,7 @@ import Shortlink from "../class/Shortlink";
 interface ShortlinkApiService {
     getshortlink(shortlink: string): Promise<Shortlink>;
 }
+const host = import.meta.env.VITE_API_URL_VU;
 
 const createShortlinkApiService = (): ShortlinkApiService => {
     return {
@@ -12,7 +13,7 @@ const createShortlinkApiService = (): ShortlinkApiService => {
          */
         async getshortlink(shortlink: string) {
             try {
-                    const response = await fetch('https://d.topup.cm/shortlink/', {
+                    const response = await fetch(`https://${host}/shortlink/`, {
                     method: 'POST',
                     headers: {
                          'Content-Type': 'application/json',

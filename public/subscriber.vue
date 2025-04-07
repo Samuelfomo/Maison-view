@@ -20,7 +20,7 @@
   <div class="min-h-screen bg-gray-100 flex items-center justify-center p-2">
     <div
         v-if="isLoading"
-        class="fixed inset-0 flex items-center justify-center bg-gray-50 bg-opacity-50 backdrop-blur-sm">
+        class="fixed inset-0 flex items-center justify-center bg-gray-400 bg-opacity-50 backdrop-blur-sm z-10">
       <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-orange-500"></div>
       <p class="ml-4 font-medium" style="color: #FF4200">Chargement...</p>
     </div>
@@ -37,7 +37,7 @@
       <div class="bg-white shadow-lg shadow-gray-600 rounded-b-lg w-full max-w-md p-3">
 
         <div class="space-y-1 mb-8 pt-3">
-          <h6 class="text-lg font-patrick-hand " style="color: #FF4200">Votre decodeur</h6>
+          <h6 class="text-lg font-patrick-hand" style="color: #FF4200">Votre décodeur</h6>
           <div class="bg-white shadow-sm rounded-lg overflow-hidden">
             <!-- Header -->
             <div class="bg-gray-200 p-2 border-gray-400 border-b-2">
@@ -379,8 +379,10 @@ export default defineComponent({
 
     detectMobileOperator() {
       const regexNumberCam = /^(\+237|237)?6(2[0]\d{6}|[5-9]\d{7})$/;
-      const orangeRegex = /^(\+237|237)?6(5[5-9]|8[5-9]|9[0-9])\d{6}$/;
-      const mtnRegex = /^(\+237|237)?6(5[0-4]|7[0-9]|8[0-4])\d{6}$/;
+      // const orangeRegex = /^(\+237|237)?6(5[5-9]|8[5-9]|9[0-9])\d{6}$/;
+      // const mtnRegex = /^(\+237|237)?6(5[0-4]|7[0-9]|8[0-4])\d{6}$/;
+      const orangeRegex = /^(00237|237)?6(([9]\d{7}$)|([5|8][5-9]\d{6}))$/;
+      const mtnRegex = /^(00237|237)?6(([7]\d{7}$)|([5|8][0-4]\d{6}))$/;
 
       const cleanedPhoneNumber = this.phoneNumber.replace(/\s+/g, '');
       // Vérifie si le numéro est camerounais

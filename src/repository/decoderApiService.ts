@@ -4,6 +4,7 @@ interface DecoderApiService {
 
     decodeNumber(  decoder: number): Promise<Decoder>;
 }
+const host = import.meta.env.VITE_API_URL_VU;
 
 const createDecoderApiService = (): DecoderApiService => {
 
@@ -15,7 +16,7 @@ const createDecoderApiService = (): DecoderApiService => {
          */
         async decodeNumber(decoder: number) {
             try {
-                    const response = await fetch(`https://d.topup.cm/search/decoder/`, {
+                    const response = await fetch(`https://${host}/search/decoder/`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -34,7 +35,6 @@ const createDecoderApiService = (): DecoderApiService => {
                 return Decoder.fromJson(data.response);
             } catch (error) {
                 console.error('Error during decoding :', error);
-                throw new Error('Unable to decode number.');
                 throw new Error('Unable to decode number.');
             }
         }
